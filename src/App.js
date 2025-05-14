@@ -46,16 +46,18 @@ const FlashcardContainer = styled.div`
   perspective: 1000px;
   width: 350px;
   height: 220px;
-  margin: 1rem 0 3.5rem 0; /* ボタンとの間を広げる */
+  margin: 1rem 0 5rem 0; /* ボタンとの間をさらに広げる */
 `;
 
 const Flashcard = styled.div`
   width: 100%;
   height: 100%;
-  position: relative;
+  position: absolute; /* 中央に固定するために absolute を使用 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) ${props => props.isFlipped ? 'rotateY(180deg)' : 'rotateY(0)'};
   transform-style: preserve-3d;
   transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
-  transform: ${props => props.isFlipped ? 'rotateY(180deg)' : 'rotateY(0)'};
   cursor: pointer;
 `;
 
@@ -156,4 +158,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
