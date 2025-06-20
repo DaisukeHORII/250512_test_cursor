@@ -29,9 +29,11 @@ const GlobalStyle = createGlobalStyle`
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start; /* Changed from center */
   min-height: 100vh;
   padding: 2rem;
+  width: 100%; /* Explicitly set width */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
 `;
 
 const Title = styled.h1`
@@ -46,7 +48,15 @@ const FlashcardContainer = styled.div`
   perspective: 1000px;
   width: 350px;
   height: 220px;
-  margin: 1rem 0 5rem 0; /* ボタンとの間をさらに広げる */
+  /* Update the margin to correctly position the card considering AppContainer's padding */
+  margin-top: 1rem;
+  margin-right: 0;
+  margin-bottom: 5rem;
+  margin-left: calc(25vw - 2rem); /* Adjusted */
+  transform: translateX(-175px); /* Translate left by half of its width */
+  /* Ensure it's not pushed off-screen if 25vw is less than 175px + AppContainer padding */
+  /* Adding a safeguard with max for margin-left if needed, or adjust strategy */
+  /* For now, let's proceed with the direct approach. We can refine if testing shows issues. */
 `;
 
 const Flashcard = styled.div`
