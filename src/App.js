@@ -1,21 +1,51 @@
 import React, { useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 
-// サンプルのフラッシュカードデータ（ルビ付き）
-const flashcardData = [
-  {
-    term: '<ruby>CPU<rt>シーピーユー</rt></ruby>',
-    definition: 'Central Processing Unitの略。<ruby>コンピュータ<rt>こんぴゅーた</rt></ruby>の<ruby>中心的<rt>ちゅうしんてき</rt></ruby>な<ruby>処理<rt>しょり</rt></ruby>を行う<ruby>装置<rt>そうち</rt></ruby>。'
-  },
-  {
-    term: '<ruby>RAM<rt>ラム</rt></ruby>',
-    definition: 'Random Access Memoryの略。<ruby>コンピュータ<rt>こんぴゅーた</rt></ruby>の<ruby>主記憶装置<rt>しゅきおくそうち</rt></ruby>。'
-  },
-  {
-    term: '<ruby>OS<rt>オーエス</rt></ruby>',
-    definition: 'Operating Systemの略。<ruby>コンピュータ<rt>こんぴゅーた</rt></ruby>の<ruby>基本<rt>きほん</rt></ruby><ruby>ソフトウェア<rt>そふとうぇあ</rt></ruby>。'
-  }
-];
+// 分野別のサンプル問題
+const categoryData = {
+  strategy: [
+    {
+      term: '<ruby>企業<rt>きぎょう</rt></ruby>が情報システム戦略を立案する際、まず最初に実施すべきことは？',
+      definition: '<ruby>経営<rt>けいえい</rt></ruby>目標や現状分析から情報化の目的を明確にすること'
+    },
+    {
+      term: 'SWOT分析の<ruby>S<rt>エス</rt></ruby>は何を表すか？',
+      definition: '<ruby>Strength<rt>ストレングス</rt></ruby>、<ruby>企業<rt>きぎょう</rt></ruby>内部の<ruby>強み<rt>つよみ</rt></ruby>'
+    },
+    {
+      term: '<ruby>ROE<rt>アールオーイー</rt></ruby>の意味は何か？',
+      definition: '<ruby>自己資本利益率<rt>じこしほんりえきりつ</rt></ruby>'
+    }
+  ],
+  management: [
+    {
+      term: 'システム開発におけるウォーターフォールモデルの最初の工程は何か？',
+      definition: '<ruby>要求定義<rt>ようきゅうていぎ</rt></ruby>'
+    },
+    {
+      term: '情報セキュリティポリシの運用・管理を行う部門を何と呼ぶか？',
+      definition: '<ruby>CSIRT<rt>シーサート</rt></ruby> または 情報セキュリティ管理部門'
+    },
+    {
+      term: 'ITサービスマネジメントの国際規格は何か？',
+      definition: 'ISO/IEC 20000'
+    }
+  ],
+  technology: [
+    {
+      term: 'OSI参照モデルでトランスポート層に該当するプロトコルはどれか？',
+      definition: 'TCPやUDP'
+    },
+    {
+      term: '主記憶装置に比べて高速でCPUに近い位置にある記憶装置を何というか？',
+      definition: '<ruby>キャッシュメモリ<rt>きゃっしゅめもり</rt></ruby>'
+    },
+    {
+      term: '公開鍵暗号方式でデータを暗号化するために必要な鍵はどれか？',
+      definition: '受信者の<ruby>公開鍵<rt>こうかいかぎ</rt></ruby>'
+    }
+  ]
+};
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -101,6 +131,28 @@ const NavigationButtons = styled.div`
   }
 `;
 
+const CategoryButtons = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+`;
+
+const CategoryButton = styled.button`
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #e0e7ff;
+  color: #22223b;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &.active {
+    background-color: #6366f1;
+    color: #fff;
+  }
+`;
+
 const Button = styled.button`
   flex: 1;
   padding: 0.7rem 0;
@@ -122,8 +174,17 @@ const Button = styled.button`
 `;
 
 function App() {
+  const [selectedCategory, setSelectedCategory] = useState('strategy');
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+
+  const flashcardData = categoryData[selectedCategory];
+
+  const handleCategoryChange = (cat) => {
+    setSelectedCategory(cat);
+    setCurrentCardIndex(0);
+    setIsFlipped(false);
+  };
 
   const handleNext = () => {
     setIsFlipped(false);
@@ -139,7 +200,27 @@ function App() {
     <>
       <GlobalStyle />
       <AppContainer>
-        <Title>ITパスポート フラッシュカード</Title>
+        <Title>ITパスポート サンプル問題</Title>
+        <CategoryButtons>
+          <CategoryButton
+            onClick={() => handleCategoryChange('strategy')}
+            className={selectedCategory === 'strategy' ? 'active' : ''}
+          >
+            ストラテジ系
+          </CategoryButton>
+          <CategoryButton
+            onClick={() => handleCategoryChange('management')}
+            className={selectedCategory === 'management' ? 'active' : ''}
+          >
+            マネジメント系
+          </CategoryButton>
+          <CategoryButton
+            onClick={() => handleCategoryChange('technology')}
+            className={selectedCategory === 'technology' ? 'active' : ''}
+          >
+            テクノロジ系
+          </CategoryButton>
+        </CategoryButtons>
         <FlashcardContainer>
           <Flashcard isFlipped={isFlipped} onClick={() => setIsFlipped(!isFlipped)}>
             <CardFace>
